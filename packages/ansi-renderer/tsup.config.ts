@@ -4,6 +4,7 @@ import pkg from './package.json' assert { type: 'json' }
 
 export default defineConfig({
   entry: ['src/index.ts'],
+  tsconfig: 'tsconfig.build.json',
   format: ['esm', 'cjs'],
   dts: true,
   splitting: false,
