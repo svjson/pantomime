@@ -1,32 +1,32 @@
+import { Surface, ANSISurface, Cell, Run, Patch } from './surface'
+
 const ESC = '\x1b[' // CSI
 
 const write = (s: string) => process.stdout.write(s)
 const cursorTo = (row: number, col: number) => write(`${ESC}${row};${col}H`)
-const hideCursor = () => write('\x1b[?25l')
-const showCursor = () => write('\x1b[?25h')
 
-const ORIGIN_ROW = 2
-const ORIGIN_COL = 2
-const BOX_COLS = 40
-const BOX_ROWS = 20
+const ORIGIN = { x: 2, y: 2 }
+const BOX_DIMS = { w: 40, h: 20 }
+
+const surface = new ANSISurface(ORIGIN)
 
 let interval: NodeJS.Timeout | null = null
 let cleanedUp = false
 
 /**
- * Draw a simple rectanle box
+ * Draw a simple rectangle box
  */
 function drawBox() {
-  cursorTo(ORIGIN_ROW - 1, ORIGIN_COL - 1)
-  write('+' + '-'.repeat(BOX_COLS) + '+')
-  for (let r = 0; r < BOX_ROWS; r++) {
-    cursorTo(ORIGIN_ROW + r, ORIGIN_COL - 1)
+  cursorTo(ORIGIN.y - 1, ORIGIN.x - 1)
+  write('+' + '-'.repeat(BOX_DIMS.w) + '+')
+  for (let r = 0; r < BOX_DIMS.h; r++) {
+    cursorTo(ORIGIN.y + r, ORIGIN.x - 1)
     write('|')
-    cursorTo(ORIGIN_ROW + r, ORIGIN_COL + BOX_COLS)
+    cursorTo(ORIGIN.y + r, ORIGIN.x + BOX_DIMS.w)
     write('|')
   }
-  cursorTo(ORIGIN_ROW + BOX_ROWS, ORIGIN_COL - 1)
-  write('+' + '-'.repeat(BOX_COLS) + '+')
+  cursorTo(ORIGIN.y + BOX_DIMS.h, ORIGIN.x - 1)
+  write('+' + '-'.repeat(BOX_DIMS.w) + '+')
 }
 
 /**
@@ -36,23 +36,15 @@ function cleanup() {
   if (cleanedUp) return
   cleanedUp = true
   if (interval) clearInterval(interval)
-  showCursor()
-  cursorTo(ORIGIN_ROW + BOX_ROWS + 2, 1)
+  surface.end()
   write('\n')
 }
 
 function start() {
-  if (!process.stdout.isTTY) {
-    console.error('Not a TTY. Run in a real terminal.')
-    process.exit(1)
-  }
+  surface.begin()
+  surface.clear()
 
-  hideCursor()
   // Clear just our region
-  for (let r = 0; r < BOX_ROWS + 3; r++) {
-    cursorTo(ORIGIN_ROW - 1 + r, ORIGIN_COL - 1)
-    write(' '.repeat(BOX_COLS + 2))
-  }
   drawBox()
 
   // dot state
@@ -66,7 +58,7 @@ function start() {
   const fpsMs = 1000 / 25
   interval = setInterval(() => {
     // erase previous
-    cursorTo(ORIGIN_ROW + py, ORIGIN_COL + px)
+    cursorTo(ORIGIN.y + py, ORIGIN.x + px)
     write(' ')
 
     // update
@@ -80,20 +72,23 @@ function start() {
       y = 0
       vy = Math.abs(vy)
     }
-    if (x > BOX_COLS - 1) {
-      x = BOX_COLS - 1
+    if (x > BOX_DIMS.w - 1) {
+      x = BOX_DIMS.w - 1
       vx = -Math.abs(vx)
     }
-    if (y > BOX_ROWS - 1) {
-      y = BOX_ROWS - 1
+    if (y > BOX_DIMS.h - 1) {
+      y = BOX_DIMS.h - 1
       vy = -Math.abs(vy)
     }
 
-    // draw new
     const ix = Math.round(x)
     const iy = Math.round(y)
-    cursorTo(ORIGIN_ROW + iy, ORIGIN_COL + ix)
-    write('*')
+
+    const patch: Patch = [
+      { y: py, x: px, cells: [{ ch: ' ' }] },
+      { y: iy, x: ix, cells: [{ ch: '*' }] },
+    ]
+    surface.present(patch)
 
     px = ix
     py = iy
