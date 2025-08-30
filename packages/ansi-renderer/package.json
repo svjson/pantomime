@@ -1,0 +1,25 @@
+{
+  "name": "@pantomime/ansi-renderer",
+  "version": "0.1.0",
+  "description": "ANSI renderer for pantomime",
+  "author": "Sven Johansson",
+  "license": "MIT",
+  "main": "index.ts",
+  "keywords": [
+    "ANSI",
+    "graphics",
+    "terminal",
+    "tui",
+    "console"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "test"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
+  }
+}

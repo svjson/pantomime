@@ -1,0 +1,27 @@
+{
+  "name": "pantomime-root",
+  "version": "0.1.0",
+  "description": "Tiny sprinkles of animation, aimed at terminal UIs",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "keywords": [
+    "animation",
+    "2D",
+    "3D",
+    "terminal",
+    "tui",
+    "console"
+  ],
+  "author": "Sven Johansson",
+  "license": "MIT",
+  "main": "index.ts",
+  "scripts": {
+    "build": "npm run --workspaces build --if-present",
+    "test": "npm run --workspaces test --if-present"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}
