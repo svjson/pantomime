@@ -72,6 +72,25 @@ export interface Coord2D {
   y: number
 }
 
+export const coordAdd = (coord: Coord2D, other: Coord2D) => {
+  return {
+    x: coord.x + other.x,
+    y: coord.y + other.y,
+  }
+}
+
+export const coordAddIn = (coord: Coord2D, other: Coord2D) => {
+  coord.x += other.x
+  coord.y += other.y
+}
+
+export const coordRound = (coord: Coord2D) => {
+  return {
+    x: Math.round(coord.x),
+    y: Math.round(coord.y),
+  }
+}
+
 export interface Dimension2D {
   w: number
   h: number

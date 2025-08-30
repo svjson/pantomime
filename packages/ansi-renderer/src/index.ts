@@ -1,4 +1,13 @@
-import { Surface, ANSISurface, Cell, Run, Patch } from './surface'
+import {
+  Surface,
+  ANSISurface,
+  Cell,
+  Run,
+  Patch,
+  coordAdd,
+  coordAddIn,
+  coordRound,
+} from './surface'
 
 const ESC = '\x1b[' // CSI
 
@@ -48,50 +57,40 @@ function start() {
   drawBox()
 
   // dot state
-  let x = 1,
-    y = 1
-  let vx = 0.6,
-    vy = 0.4 // cells per frame @ ~25 fps
-  let px = x,
-    py = y // previous integer position for erasing
+  const dot = { x: 1, y: 1 }
+  const velocity = { x: 0.6, y: 0.4 }
+  let prevCoord = { ...dot }
 
   const fpsMs = 1000 / 25
   interval = setInterval(() => {
-    // erase previous
-    cursorTo(ORIGIN.y + py, ORIGIN.x + px)
-    write(' ')
-
     // update
-    x += vx
-    y += vy
-    if (x < 0) {
-      x = 0
-      vx = Math.abs(vx)
+    coordAddIn(dot, velocity)
+    if (dot.x < 0) {
+      dot.x = 0
+      velocity.x = Math.abs(velocity.x)
     }
-    if (y < 0) {
-      y = 0
-      vy = Math.abs(vy)
+    if (dot.y < 0) {
+      dot.y = 0
+      velocity.y = Math.abs(velocity.y)
     }
-    if (x > BOX_DIMS.w - 1) {
-      x = BOX_DIMS.w - 1
-      vx = -Math.abs(vx)
+    if (dot.x > BOX_DIMS.w - 1) {
+      dot.x = BOX_DIMS.w - 1
+      velocity.x = -Math.abs(velocity.x)
     }
-    if (y > BOX_DIMS.h - 1) {
-      y = BOX_DIMS.h - 1
-      vy = -Math.abs(vy)
+    if (dot.y > BOX_DIMS.h - 1) {
+      dot.y = BOX_DIMS.h - 1
+      velocity.y = -Math.abs(velocity.y)
     }
 
-    const ix = Math.round(x)
-    const iy = Math.round(y)
+    const i = coordRound(dot)
 
     const patch: Patch = [
-      { y: py, x: px, cells: [{ ch: ' ' }] },
-      { y: iy, x: ix, cells: [{ ch: '*' }] },
+      { ...prevCoord, cells: [{ ch: ' ' }] },
+      { ...i, cells: [{ ch: '*' }] },
     ]
     surface.present(patch)
 
-    px = ix
-    py = iy
+    prevCoord = i
   }, fpsMs)
 }
 
