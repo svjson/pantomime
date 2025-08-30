@@ -22,6 +22,11 @@
     "test": "npm run --workspaces test --if-present"
   },
   "devDependencies": {
-    "prettier": "^3.6.2"
+    "@types/node": "^24.3.0",
+    "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4",
+    "vitest-tsconfig-paths": "^3.4.1"
   }
 }

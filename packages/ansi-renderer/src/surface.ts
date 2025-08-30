@@ -1,3 +1,5 @@
+import { Coord2D, Dimension2D } from './dimension'
+
 /**
  * Smallest unit of output, a character/terminal cell.
  */
@@ -67,33 +69,9 @@ export interface Surface {
   end(): void
 }
 
-export interface Coord2D {
-  x: number
-  y: number
-}
-
-export const coordAdd = (coord: Coord2D, other: Coord2D) => {
-  return {
-    x: coord.x + other.x,
-    y: coord.y + other.y,
-  }
-}
-
-export const coordAddIn = (coord: Coord2D, other: Coord2D) => {
-  coord.x += other.x
-  coord.y += other.y
-}
-
-export const coordRound = (coord: Coord2D) => {
-  return {
-    x: Math.round(coord.x),
-    y: Math.round(coord.y),
-  }
-}
-
-export interface Dimension2D {
-  w: number
-  h: number
+export interface Output {
+  write(buffer: Uint8Array | string, cb?: (err?: Error | null) => void): boolean
+  isTTY: boolean
 }
 
 /**
@@ -117,7 +95,8 @@ export class ANSISurface implements Surface {
    */
   constructor(
     private origin: Coord2D = { x: 1, y: 1 },
-    private dim: Dimension2D = { w: 40, h: 20 }
+    private dim: Dimension2D = { w: 1, h: 1 },
+    private __out: Output = process.stdout
   ) {}
 
   /**
@@ -127,7 +106,7 @@ export class ANSISurface implements Surface {
   /**
    * Output `s` to stdout
    */
-  private write = (s: string) => process.stdout.write(s)
+  private write = (s: string) => this.__out.write(s)
   /**
    * Move cursor/output point to coordinate `c`.
    *
@@ -163,7 +142,7 @@ export class ANSISurface implements Surface {
    * Hide cursor
    */
   begin() {
-    if (!process.stdout.isTTY) {
+    if (!this.__out.isTTY) {
       console.error('Not a TTY. Run in a real terminal.')
       process.exit(1)
     }

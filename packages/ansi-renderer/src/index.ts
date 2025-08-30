@@ -1,23 +1,14 @@
-import {
-  Surface,
-  ANSISurface,
-  Cell,
-  Run,
-  Patch,
-  coordAdd,
-  coordAddIn,
-  coordRound,
-} from './surface'
-
-const ESC = '\x1b[' // CSI
+import { ANSISurface } from './surface'
+import { coordAddIn, coordRound } from './arithmetic'
+import { GridCanvas } from './grid'
+import { Canvas } from './canvas'
 
 const write = (s: string) => process.stdout.write(s)
-const cursorTo = (row: number, col: number) => write(`${ESC}${row};${col}H`)
 
-const ORIGIN = { x: 2, y: 2 }
-const BOX_DIMS = { w: 40, h: 20 }
+const ORIGIN = { x: 5, y: 5 }
+const BOX_DIMS = { w: 50, h: 25 }
 
-const surface = new ANSISurface(ORIGIN)
+const surface = new ANSISurface(ORIGIN, BOX_DIMS)
 
 let interval: NodeJS.Timeout | null = null
 let cleanedUp = false
@@ -25,17 +16,15 @@ let cleanedUp = false
 /**
  * Draw a simple rectangle box
  */
-function drawBox() {
-  cursorTo(ORIGIN.y - 1, ORIGIN.x - 1)
-  write('+' + '-'.repeat(BOX_DIMS.w) + '+')
-  for (let r = 0; r < BOX_DIMS.h; r++) {
-    cursorTo(ORIGIN.y + r, ORIGIN.x - 1)
-    write('|')
-    cursorTo(ORIGIN.y + r, ORIGIN.x + BOX_DIMS.w)
-    write('|')
-  }
-  cursorTo(ORIGIN.y + BOX_DIMS.h, ORIGIN.x - 1)
-  write('+' + '-'.repeat(BOX_DIMS.w) + '+')
+const drawBox = (canvas: Canvas) => {
+  canvas.plot({ x: 0, y: 0 }, '+')
+  canvas.plotHLine({ x: 1, y: 0 }, BOX_DIMS.w - 2, '-')
+  canvas.plot({ x: BOX_DIMS.w - 1, y: 0 }, '+')
+  canvas.plotVLine({ x: BOX_DIMS.w - 1, y: 1 }, BOX_DIMS.h - 2, '|')
+  canvas.plot({ x: BOX_DIMS.w - 1, y: BOX_DIMS.h - 1 }, '+')
+  canvas.plotHLine({ x: 1, y: BOX_DIMS.h - 1 }, BOX_DIMS.w - 2, '-')
+  canvas.plot({ x: 0, y: BOX_DIMS.h - 1 }, '+')
+  canvas.plotVLine({ x: 0, y: 1 }, BOX_DIMS.h - 2, '|')
 }
 
 /**
@@ -53,16 +42,23 @@ function start() {
   surface.begin()
   surface.clear()
 
-  // Clear just our region
-  drawBox()
+  const canvas = new GridCanvas(BOX_DIMS)
+  canvas.beginFrame()
+  drawBox(canvas)
+
+  surface.present(canvas.finalizeFrame())
 
   // dot state
   const dot = { x: 1, y: 1 }
   const velocity = { x: 0.6, y: 0.4 }
   let prevCoord = { ...dot }
 
+  const container = { x: 1, y: 1, w: BOX_DIMS.w - 2, h: BOX_DIMS.h - 2 }
+  canvas.translate({ x: 1, y: 1 })
+
   const fpsMs = 1000 / 25
   interval = setInterval(() => {
+    canvas.beginFrame(false)
     // update
     coordAddIn(dot, velocity)
     if (dot.x < 0) {
@@ -73,22 +69,20 @@ function start() {
       dot.y = 0
       velocity.y = Math.abs(velocity.y)
     }
-    if (dot.x > BOX_DIMS.w - 1) {
-      dot.x = BOX_DIMS.w - 1
+    if (dot.x > container.w - 1) {
+      dot.x = container.w - 1
       velocity.x = -Math.abs(velocity.x)
     }
-    if (dot.y > BOX_DIMS.h - 1) {
-      dot.y = BOX_DIMS.h - 1
+    if (dot.y > container.h - 1) {
+      dot.y = container.h - 1
       velocity.y = -Math.abs(velocity.y)
     }
 
     const i = coordRound(dot)
 
-    const patch: Patch = [
-      { ...prevCoord, cells: [{ ch: ' ' }] },
-      { ...i, cells: [{ ch: '*' }] },
-    ]
-    surface.present(patch)
+    canvas.plot(prevCoord, ' ')
+    canvas.plot(i, '*')
+    surface.present(canvas.finalizeFrame())
 
     prevCoord = i
   }, fpsMs)

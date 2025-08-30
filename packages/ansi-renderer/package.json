@@ -4,7 +4,19 @@
   "description": "ANSI renderer for pantomime",
   "author": "Sven Johansson",
   "license": "MIT",
-  "main": "index.ts",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    }
+  },
   "keywords": [
     "ANSI",
     "graphics",
@@ -13,13 +25,10 @@
     "console"
   ],
   "scripts": {
-    "build": "tsc",
-    "test": "test"
+    "build": "tsup",
+    "test": "vitest run"
   },
   "dependencies": {
-  },
-  "devDependencies": {
-    "@types/node": "^24.3.0",
-    "typescript": "^5.9.2"
+    "fast-deep-equal": "^3.1.3"
   }
 }
