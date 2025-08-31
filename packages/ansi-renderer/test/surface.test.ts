@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { ANSISurface, Output } from '@src/surface'
-import { Coord2D } from './dimension'
+import { Coord2D } from './geom'
 
 class FakeOutput implements Output {
   written: (Uint8Array | string)[] = []

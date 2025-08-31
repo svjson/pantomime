@@ -5,7 +5,7 @@ import {
   coordAddIn,
   coordRound,
   insideRect,
-} from '@src/arithmetic'
+} from '@src/index'
 
 describe('coordAdd', () => {
   it.each([

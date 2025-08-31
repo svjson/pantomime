@@ -1,4 +1,4 @@
-import { Coord2D, Dimension2D } from './dimension'
+import { Coord2D, Dimension2D } from './geom'
 
 /**
  * Smallest unit of output, a character/terminal cell.

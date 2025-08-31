@@ -1,4 +1,4 @@
-import { Coord2D, Dimension2D, Rect2D } from './dimension'
+import { Coord2D, Dimension2D, Rect2D } from './geom'
 
 /**
  * Add x and y values of two Coord2D coordinates and return a new result.

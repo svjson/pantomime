@@ -1,4 +1,4 @@
-import { Coord2D, Dimension2D, Rect2D } from './dimension'
+import { Coord2D, Dimension2D, Rect2D } from './geom'
 import { GridCell } from './grid'
 import { Patch } from './surface'
 

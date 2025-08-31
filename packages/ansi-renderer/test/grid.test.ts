@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { Grid } from '@src/grid'
+import { Grid } from '@src/index'
 
 const RED = 0xff0000
 const BLUE = 0x0000ff

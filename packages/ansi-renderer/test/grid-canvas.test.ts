@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { GridCanvas } from '@src/grid'
-import { Coord2D } from './dimension'
+import { Coord2D, GridCanvas } from '@src/index'
 
 describe('GridCanvas', () => {
   describe('plot', () => {
