@@ -9,7 +9,7 @@ export {
   dimSubtract,
   dimDivide,
   insideRect,
-} from "./geom";
+} from './geom'
 
-export type { Canvas } from "./canvas";
-export type { Dimension2D, Coord2D, Rect2D } from "./geom";
+export type { Canvas } from './canvas'
+export type { Dimension2D, Coord2D, Rect2D } from './geom'

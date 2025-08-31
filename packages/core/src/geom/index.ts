@@ -9,6 +9,6 @@ export {
   dimSubtract,
   dimDivide,
   insideRect,
-} from "./ops";
+} from './ops'
 
-export type { Dimension2D, Coord2D, Rect2D } from "./types";
+export type { Dimension2D, Coord2D, Rect2D } from './types'
