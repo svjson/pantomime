@@ -28,7 +28,8 @@
     "build": "tsup",
     "test": "vitest run",
     "demo:bounce": "tsx demo/bounce.ts",
-    "demo:lava": "tsx demo/lava.ts"
+    "demo:lava": "tsx demo/lava.ts",
+    "demo:rotate-shape": "tsx demo/rotate-shape.ts"
   },
   "dependencies": {
     "fast-deep-equal": "^3.1.3"

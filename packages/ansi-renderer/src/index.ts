@@ -6,7 +6,9 @@ export {
   coordAdd,
   coordAddIn,
   coordDistance,
+  coordRotate,
   coordRound,
+  coordSubtract,
   insideRect,
 } from './arithmetic'
 

@@ -18,6 +18,23 @@ export const coordAdd = (coord: Coord2D, other: Coord2D): Coord2D => {
 }
 
 /**
+ * Subtract x and y values of `other` from `coord` and return a new result.
+ *
+ * Does not mutate any of the argument values.
+ *
+ * @param coord - First coordinate
+ * @param other - Second coordinate
+ *
+ * @return New coordinate which is the sum of `coord` and `other`
+ */
+export const coordSubtract = (coord: Coord2D, other: Coord2D): Coord2D => {
+  return {
+    x: coord.x - other.x,
+    y: coord.y - other.y,
+  }
+}
+
+/**
  * Add x and y values of `other` to `coord`, mutating `coord`.
  *
  * Mutates `coord`. Does not mutate `other`.
@@ -82,4 +99,10 @@ export const insideRect = (rect: Rect2D | Dimension2D, c: Coord2D): boolean => {
   const x = (rect as Rect2D).x ?? 0
   const y = (rect as Rect2D).y ?? 0
   return c.x >= x && c.x < x + rect.w && c.y >= y && c.y < y + rect.h
+}
+
+export const coordRotate = (c: Coord2D, angle: number): Coord2D => {
+  const cos = Math.cos(angle)
+  const sin = Math.sin(angle)
+  return { x: c.x * cos - c.y * sin, y: c.x * sin + c.y * cos }
 }
