@@ -1,5 +1,5 @@
 import { Coord2D, coordAddIn, coordDistance } from '@pantomime/core'
-import { Canvas, GridCanvas, TerminalDisplay } from '@src/index'
+import { GlyphCanvas, GridCanvas, TerminalDisplay } from '@src/index'
 import { DemoResources, drawBox, makeHUD, register } from './common'
 
 const FRAMERATE_MS = 1000 / 25
@@ -31,7 +31,7 @@ const start = () => {
   surface.begin()
   surface.clear()
 
-  const canvas: Canvas = new GridCanvas(surface.bounds)
+  const canvas: GlyphCanvas = new GridCanvas(surface.bounds)
 
   surface.on('resize', () => {
     console.clear()

@@ -8,6 +8,6 @@
       "@src/*": ["src/*"]
     }
   },
-  "include": ["src", "test", "demo", "../core/test/geom/ops.test.ts"],
+  "include": ["src", "test", "demo"],
   "exclude": ["dist"]
 }

@@ -1,21 +1,23 @@
-import { Coord2D, Dimension2D, Rect2D } from '@pantomime/core'
-import { GridCell } from './grid'
-import { Patch } from './surface'
+import { Coord2D, Dimension2D, Rect2D } from "@pantomime/core";
 
-export interface Canvas {
-  readonly dim: Dimension2D
+export interface Canvas<P, Out> {
+  readonly dim: Dimension2D;
 
   /**
    * Begin drawing a new frame.
    *
    * Swaps/clears buffers as needed, depending on implementation.
    */
-  beginFrame(clear?: boolean): void
+  beginFrame(clear?: boolean): void;
 
   /**
-   * Finalize frame and return `Patch` for `Surface`
+   * Finalize frame and return frame output.
+   *
+   * Frame output is implementation specific and may be the entire
+   * framebuffer - or a patch - containing the changes since last
+   * frame. See the documentation for the appropriate Canvas tree.
    */
-  finalizeFrame(): Patch
+  finalizeFrame(): Out;
 
   /**
    * Offset furthering drawing from `offset`
@@ -27,7 +29,7 @@ export interface Canvas {
    * @param coord Offset coordinate
    * @param relative Whether to offset from current translation
    */
-  translate(coord: Coord2D, relative?: boolean): void
+  translate(coord: Coord2D, relative?: boolean): void;
 
   /**
    * Set a clip rectangle, ignoring any drawing outside of this region.
@@ -37,12 +39,12 @@ export interface Canvas {
    *
    * @param rect Clipping rectangle
    */
-  setClip(rect?: Rect2D): void
+  setClip(rect?: Rect2D): void;
 
   /**
    * Clear all canvas content
    */
-  clear(): void
+  clear(): void;
 
   /**
    * Resize the canvas according to `dim`.
@@ -50,7 +52,7 @@ export interface Canvas {
    * The semantics of the resizing of the contents is subject to Canvas
    * implementation.
    */
-  resize(dim: Dimension2D): void
+  resize(dim: Dimension2D): void;
 
   /**
    * Plot a single cell/"pixel"
@@ -61,7 +63,7 @@ export interface Canvas {
    * @param coord Coordinate to plot at
    * @param value Cell data or character to plot
    */
-  plot(coord: Coord2D, value: string | GridCell): void
+  plot(coord: Coord2D, value: P): void;
 
   /**
    * Draw a line from coordinate `a` to coordinate `b`
@@ -70,7 +72,7 @@ export interface Canvas {
    * @param b Ending coordinate
    * @param value Cell data or character to plot
    */
-  plotLine(a: Coord2D, b: Coord2D, value: string | GridCell): void
+  plotLine(a: Coord2D, b: Coord2D, value: P): void;
 
   /**
    * Draw a horizontal line at row starting from coordinate `c`
@@ -82,7 +84,7 @@ export interface Canvas {
    * @param len Length of line
    * @param value Cell data or character to plot
    */
-  plotHLine(c: Coord2D, len: number, value: string | GridCell): void
+  plotHLine(c: Coord2D, len: number, value: P): void;
 
   /**
    * Draw a vertical line at row starting from coordinate `c`
@@ -94,7 +96,7 @@ export interface Canvas {
    * @param len Length of line
    * @param value Cell data or character to plot
    */
-  plotVLine(c: Coord2D, len: number, value: string | GridCell): void
+  plotVLine(c: Coord2D, len: number, value: P): void;
 
   /**
    * Plot the outline of a rectangle
@@ -102,7 +104,7 @@ export interface Canvas {
    * @param rect Rectangle to plot
    * @param value Cell data or character to plot
    */
-  plotRect(rect: Rect2D, value: string | GridCell): void
+  plotRect(rect: Rect2D, value: P): void;
 
   /**
    * Plot a filled rectangle
@@ -110,7 +112,7 @@ export interface Canvas {
    * @param rect Rectangle to fill
    * @param value Cell data or character to plot
    */
-  fillRect(rect: Rect2D, value: string | GridCell): void
+  fillRect(rect: Rect2D, value: P): void;
 
   /**
    * Draw text/string `text` at coordinate `c`
@@ -118,7 +120,7 @@ export interface Canvas {
    * @param c Coordinate to draw text at
    * @param text Text/string to draw
    */
-  text(c: Coord2D, text: string): void
+  text(c: Coord2D, text: string): void;
 
   /**
    * Draw, or "blit", the contents of another canvas onto this canvas at `c`
@@ -129,5 +131,5 @@ export interface Canvas {
    * @param c Coordinate to draw the source canvas at
    * @param src Source canvas to draw
    */
-  blit(c: Coord2D, src: Canvas): void
+  blit(c: Coord2D, src: Canvas<P, Out>): void;
 }

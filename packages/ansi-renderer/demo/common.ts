@@ -1,5 +1,5 @@
 import { Dimension2D } from '@pantomime/core'
-import { Surface, Canvas, Display, GridCanvas } from '@src/index'
+import { Surface, GlyphCanvas, Display, GridCanvas } from '@src/index'
 
 export interface DemoResources {
   surface: Surface
@@ -34,7 +34,7 @@ export const register = (res: DemoResources) => {
 /**
  * Draw a simple rectangle box
  */
-export const drawBox = (canvas: Canvas, dim: Dimension2D) => {
+export const drawBox = (canvas: GlyphCanvas, dim: Dimension2D) => {
   canvas.plot({ x: 0, y: 0 }, '+')
   canvas.plotHLine({ x: 1, y: 0 }, dim.w - 2, '-')
 

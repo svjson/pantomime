@@ -1,6 +1,7 @@
 import { Coord2D, coordAdd, coordRotate, coordSubtract } from '@pantomime/core'
+
 import { Cell } from './surface'
-import { Canvas } from './canvas'
+import { GlyphCanvas } from './glyph-canvas'
 
 export type Shape2D = Cell[][]
 
@@ -32,7 +33,7 @@ export class Entity {
     this.transform.pos = pos
   }
 
-  draw(canvas: Canvas) {
+  draw(canvas: GlyphCanvas) {
     const rot = this.transform.rot
     const w = this.shape[0].length
     const h = this.shape.length

@@ -1,7 +1,7 @@
 import { coordRound } from '@pantomime/core'
 
 import {
-  Canvas,
+  GlyphCanvas,
   GridCanvas,
   Entity,
   makeShape,
@@ -36,7 +36,7 @@ const start = () => {
   console.clear()
   surface.begin()
 
-  const canvas: Canvas = new GridCanvas(surface.bounds)
+  const canvas: GlyphCanvas = new GridCanvas(surface.bounds)
 
   const shape = makeShape([
     '    ,#####       ##        ##    .##    #########    ###  ',
