@@ -28,17 +28,22 @@
     "build": "tsup",
     "demo:bounce": "tsx demo/bounce.ts",
     "demo:lava": "tsx demo/lava.ts",
-    "demo:rotate-shape": "tsx demo/rotate-shape.ts",
+    "demo:rotate-polygon": "tsx demo/rotate-polygon.ts",
+    "demo:rotate-sprite": "tsx demo/rotate-sprite.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@pantomime/core": "^0.0.1"
+    "@pantomime/core": "^0.0.1",
+    "@pantomime/raster": "^0.0.1",
+    "@pantomime/vector": "^0.0.1"
   },
   "dependencies": {
     "fast-deep-equal": "^3.1.3"
   },
   "devDependencies": {
-    "@pantomime/core": "^0.0.1"
+    "@pantomime/core": "^0.0.1",
+    "@pantomime/raster": "^0.0.1",
+    "@pantomime/vector": "^0.0.1"
   }
 }

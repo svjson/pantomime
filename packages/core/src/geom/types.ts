@@ -1,4 +1,18 @@
 /**
+ * Degrees of rotation
+ */
+export type Degrees = number
+
+/**
+ * Describes the position and transformation of any object
+ * in 2D space
+ */
+export interface Transform {
+  pos: Coord2D
+  rot?: Degrees
+}
+
+/**
  * A coordinate in 2D space
  */
 export interface Coord2D {

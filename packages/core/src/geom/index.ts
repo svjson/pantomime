@@ -11,4 +11,4 @@ export {
   insideRect,
 } from './ops'
 
-export type { Dimension2D, Coord2D, Rect2D } from './types'
+export type { Degrees, Dimension2D, Coord2D, Rect2D, Transform } from './types'

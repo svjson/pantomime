@@ -1,0 +1,38 @@
+{
+  "name": "@pantomime/vector",
+  "version": "0.0.1",
+  "description": "Pantomime Vector Graphics ",
+  "author": "Sven Johansson",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    }
+  },
+  "keywords": [
+    "bitmap",
+    "graphics",
+    "image"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@pantomime/core": "^0.0.1"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@pantomime/core": "^0.0.1"
+  }
+}

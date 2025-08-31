@@ -1,13 +1,14 @@
 import { coordRound } from '@pantomime/core'
+import { Sprite } from '@pantomime/raster'
 
 import {
   GlyphCanvas,
   GridCanvas,
-  Entity,
-  makeShape,
+  makeGlyphBitmap,
   TerminalDisplay,
 } from '@src/index'
 import { DemoResources, drawBox, makeHUD, register } from './common'
+import { Cell } from './surface'
 
 const FRAMERATE_MS = 1000 / 25
 
@@ -38,7 +39,7 @@ const start = () => {
 
   const canvas: GlyphCanvas = new GridCanvas(surface.bounds)
 
-  const shape = makeShape([
+  const shape = makeGlyphBitmap([
     '    ,#####       ##        ##    .##    #########    ###  ',
     '   ,#...,*#    ##*.##     #*.#  .#**#  #*.......*#  #*.*# ',
     '   #*.##,,#   #*.##.#    #*...# #*.**   ##-...###  #*...# ',
@@ -50,7 +51,11 @@ const start = () => {
     '    #*.*#    #*#  #*#    #.#    #*#       ##       #..#   ',
     '     ###     ##    #      #      #                  ##*   ',
   ])
-  const entity = new Entity({ x: 50, y: 20 }, shape)
+  const entity = new Sprite<Cell>(
+    { x: 50, y: 20 },
+    shape,
+    (c) => !c || c.ch === ' '
+  )
 
   const hud = makeHUD(display, surface, FRAMERATE_MS)
 
