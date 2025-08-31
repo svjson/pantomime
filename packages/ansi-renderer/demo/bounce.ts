@@ -5,7 +5,7 @@ import {
   GridCanvas,
   TerminalDisplay,
 } from '@src/index'
-import { DemoResources, drawBox, register } from './common'
+import { DemoResources, drawBox, makeHUD, register } from './common'
 
 const FRAMERATE_MS = 1000 / 25
 const BOX_DIMS = { w: 50, h: 25 }
@@ -45,6 +45,8 @@ const start = () => {
   const dot = { x: 1, y: 1 }
   const velocity = { x: 0.6, y: 0.4 }
 
+  const hud = makeHUD(display, surface, FRAMERATE_MS)
+
   resources.interval = setInterval(() => {
     const container = {
       x: 1,
@@ -78,6 +80,7 @@ const start = () => {
     const i = coordRound(dot)
 
     canvas.plot(i, '*')
+    hud.tick()
     surface.present(canvas.finalizeFrame())
   }, FRAMERATE_MS)
 }

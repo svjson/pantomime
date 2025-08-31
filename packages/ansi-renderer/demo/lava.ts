@@ -6,7 +6,7 @@ import {
   coordDistance,
   TerminalDisplay,
 } from '@src/index'
-import { DemoResources, drawBox, register } from './common'
+import { DemoResources, drawBox, makeHUD, register } from './common'
 
 const FRAMERATE_MS = 1000 / 25
 const RAMP = ' .:-=+*#%@%#*+=-:. '
@@ -66,6 +66,8 @@ const start = () => {
     })
   }
 
+  const hud = makeHUD(display, surface, FRAMERATE_MS)
+
   resources.interval = setInterval(() => {
     let container = {
       x: 1,
@@ -120,6 +122,8 @@ const start = () => {
         )
       }
     }
+
+    hud.tick()
 
     surface.present(canvas.finalizeFrame())
   }, FRAMERATE_MS)

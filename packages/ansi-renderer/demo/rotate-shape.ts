@@ -6,7 +6,7 @@ import {
   TerminalDisplay,
   coordRound,
 } from '@src/index'
-import { DemoResources, drawBox, register } from './common'
+import { DemoResources, drawBox, makeHUD, register } from './common'
 
 const FRAMERATE_MS = 1000 / 25
 
@@ -51,6 +51,8 @@ const start = () => {
   ])
   const entity = new Entity({ x: 50, y: 20 }, shape)
 
+  const hud = makeHUD(display, surface, FRAMERATE_MS)
+
   resources.interval = setInterval(() => {
     canvas.beginFrame(true)
     canvas.setClip()
@@ -63,11 +65,11 @@ const start = () => {
     }
     canvas.setClip(container)
 
+    entity.transform.rot += 0.05
     entity.position = coordRound({ x: canvas.dim.w / 2, y: canvas.dim.h / 2 })
     entity.draw(canvas)
     surface.present(canvas.finalizeFrame())
-
-    entity.transform.rot += 0.05
+    hud.tick()
   }, FRAMERATE_MS)
 }
 
