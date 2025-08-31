@@ -1,4 +1,4 @@
-import { Dimension2D } from './geom'
+import { Dimension2D } from '@pantomime/core'
 import { Layout, LayoutOptions } from './layout'
 import { ANSISurface, Output, Surface } from './surface'
 

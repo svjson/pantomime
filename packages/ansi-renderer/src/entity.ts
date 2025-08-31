@@ -1,7 +1,6 @@
-import { Coord2D } from './geom'
+import { Coord2D, coordAdd, coordRotate, coordSubtract } from '@pantomime/core'
 import { Cell } from './surface'
 import { Canvas } from './canvas'
-import { coordAdd, coordRotate, coordRound, coordSubtract } from './arithmetic'
 
 export type Shape2D = Cell[][]
 

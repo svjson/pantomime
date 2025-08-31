@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Dimension2D, Rect2D } from '@src/index'
+import { Dimension2D, Rect2D } from '@pantomime/core'
 import { Align, applyRelativeLength, Layout } from '@src/layout'
 
 describe('Layout', () => {

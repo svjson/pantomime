@@ -1,4 +1,5 @@
 import { TerminalOutput, TerminalOutputEventType } from './display'
+import { Dimension2D } from '@pantomime/core'
 
 export class FakeTerminalOutput implements TerminalOutput {
   written: (Uint8Array | string)[] = []

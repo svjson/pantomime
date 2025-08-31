@@ -19,7 +19,8 @@
   "main": "index.ts",
   "scripts": {
     "build": "npm run --workspaces build --if-present",
-    "test": "npm run --workspaces test --if-present"
+    "test": "npm run --workspaces test --if-present",
+    "typecheck": "npm run --workspaces typecheck --if-present"
   },
   "devDependencies": {
     "@types/node": "^24.3.0",

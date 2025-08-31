@@ -1,4 +1,4 @@
-import { Coord2D, Dimension2D, Rect2D } from './geom'
+import { Coord2D, Dimension2D, Rect2D } from '@pantomime/core'
 
 /**
  * Smallest unit of output, a character/terminal cell.

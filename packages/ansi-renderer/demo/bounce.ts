@@ -1,10 +1,6 @@
-import {
-  Canvas,
-  coordAddIn,
-  coordRound,
-  GridCanvas,
-  TerminalDisplay,
-} from '@src/index'
+import { coordAddIn, coordRound } from '@pantomime/core'
+
+import { Canvas, GridCanvas, TerminalDisplay } from '@src/index'
 import { DemoResources, drawBox, makeHUD, register } from './common'
 
 const FRAMERATE_MS = 1000 / 25

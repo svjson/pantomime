@@ -1,10 +1,11 @@
+import { coordRound } from '@pantomime/core'
+
 import {
   Canvas,
   GridCanvas,
   Entity,
   makeShape,
   TerminalDisplay,
-  coordRound,
 } from '@src/index'
 import { DemoResources, drawBox, makeHUD, register } from './common'
 

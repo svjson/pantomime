@@ -1,7 +1,13 @@
 import equal from 'fast-deep-equal'
 
-import { areaOf, coordAdd, insideRect } from './arithmetic'
-import { Coord2D, Dimension2D, Rect2D } from './geom'
+import {
+  Coord2D,
+  Dimension2D,
+  Rect2D,
+  areaOf,
+  coordAdd,
+  insideRect,
+} from '@pantomime/core'
 import { Canvas } from './canvas'
 import { Patch, Run, Cell } from './surface'
 

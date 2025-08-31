@@ -1,4 +1,4 @@
-import { Dimension2D, Rect2D } from './geom'
+import { Dimension2D, Rect2D } from '@pantomime/core'
 
 export type Insets = {
   top?: number

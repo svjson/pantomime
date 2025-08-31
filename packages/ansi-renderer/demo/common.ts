@@ -1,5 +1,5 @@
-import { Surface, Canvas, Display, Dimension2D, GridCanvas } from '@src/index'
-import { X509Certificate } from 'crypto'
+import { Dimension2D } from '@pantomime/core'
+import { Surface, Canvas, Display, GridCanvas } from '@src/index'
 
 export interface DemoResources {
   surface: Surface

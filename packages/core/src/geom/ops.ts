@@ -1,4 +1,4 @@
-import { Coord2D, Dimension2D, Rect2D } from './geom'
+import { Coord2D, Dimension2D, Rect2D } from "./types";
 
 /**
  * Add x and y values of two Coord2D coordinates and return a new result.
@@ -14,8 +14,8 @@ export const coordAdd = (coord: Coord2D, other: Coord2D): Coord2D => {
   return {
     x: coord.x + other.x,
     y: coord.y + other.y,
-  }
-}
+  };
+};
 
 /**
  * Subtract x and y values of `other` from `coord` and return a new result.
@@ -31,8 +31,8 @@ export const coordSubtract = (coord: Coord2D, other: Coord2D): Coord2D => {
   return {
     x: coord.x - other.x,
     y: coord.y - other.y,
-  }
-}
+  };
+};
 
 /**
  * Add x and y values of `other` to `coord`, mutating `coord`.
@@ -43,9 +43,9 @@ export const coordSubtract = (coord: Coord2D, other: Coord2D): Coord2D => {
  * @param other - Second coordinate
  */
 export const coordAddIn = (coord: Coord2D, other: Coord2D): void => {
-  coord.x += other.x
-  coord.y += other.y
-}
+  coord.x += other.x;
+  coord.y += other.y;
+};
 
 /**
  * Return a new Coord2D where x and y values have been rounded according
@@ -60,8 +60,8 @@ export const coordRound = (coord: Coord2D): Coord2D => {
   return {
     x: Math.round(coord.x),
     y: Math.round(coord.y),
-  }
-}
+  };
+};
 
 /**
  * Return the distance between two coordinates
@@ -71,8 +71,8 @@ export const coordRound = (coord: Coord2D): Coord2D => {
  * @return Distance between coordinates
  */
 export const coordDistance = (a: Coord2D, b: Coord2D): number => {
-  return Math.hypot(b.x - a.x, b.y - a.y)
-}
+  return Math.hypot(b.x - a.x, b.y - a.y);
+};
 
 /**
  * Subtract w and h values of `other` from `dim` and return a new result.
@@ -86,13 +86,13 @@ export const coordDistance = (a: Coord2D, b: Coord2D): number => {
  */
 export const dimSubtract = (
   dim: Dimension2D,
-  other: Dimension2D
+  other: Dimension2D,
 ): Dimension2D => {
   return {
     w: dim.w - other.w,
     h: dim.h - other.h,
-  }
-}
+  };
+};
 
 /**
  * Divide dimension `dim` by `other` and return a new instance.
@@ -106,14 +106,14 @@ export const dimSubtract = (
  */
 export const dimDivide = (
   dim: Dimension2D,
-  other: Dimension2D | number
+  other: Dimension2D | number,
 ): Dimension2D => {
-  const { w, h } = typeof other === 'number' ? { w: other, h: other } : other
+  const { w, h } = typeof other === "number" ? { w: other, h: other } : other;
   return {
-    w: dim.w - w,
-    h: dim.h - h,
-  }
-}
+    w: dim.w / w,
+    h: dim.h / h,
+  };
+};
 
 /**
  * Calculate the area of a rectangle or dimension
@@ -122,8 +122,8 @@ export const dimDivide = (
  * @return Area (width * height)
  */
 export const areaOf = (dim: Rect2D | Dimension2D): number => {
-  return dim.w * dim.h
-}
+  return dim.w * dim.h;
+};
 
 /**
  * Check if a coordinate is inside a rectangle or dimension.
@@ -137,13 +137,23 @@ export const areaOf = (dim: Rect2D | Dimension2D): number => {
  * @return True if coordinate is inside rectangle/dimension, false otherwise
  */
 export const insideRect = (rect: Rect2D | Dimension2D, c: Coord2D): boolean => {
-  const x = (rect as Rect2D).x ?? 0
-  const y = (rect as Rect2D).y ?? 0
-  return c.x >= x && c.x < x + rect.w && c.y >= y && c.y < y + rect.h
-}
+  const x = (rect as Rect2D).x ?? 0;
+  const y = (rect as Rect2D).y ?? 0;
+  return c.x >= x && c.x < x + rect.w && c.y >= y && c.y < y + rect.h;
+};
 
+/**
+ * Rotate a coordinate around the origin (0,0) by `angle` radians
+ * and return a new coordinate.
+ *
+ * Does not mutate the argument value.
+ *
+ * @param c - Coordinate to rotate
+ * @param angle - Angle in radians
+ * @return New rotated coordinate
+ */
 export const coordRotate = (c: Coord2D, angle: number): Coord2D => {
-  const cos = Math.cos(angle)
-  const sin = Math.sin(angle)
-  return { x: c.x * cos - c.y * sin, y: c.x * sin + c.y * cos }
-}
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  return { x: c.x * cos - c.y * sin, y: c.x * sin + c.y * cos };
+};
