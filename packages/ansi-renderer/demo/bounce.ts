@@ -1,38 +1,31 @@
-import { ANSISurface } from '@src/surface'
-import { coordAddIn, coordRound } from '@src/arithmetic'
-import { GridCanvas } from '@src/grid'
-import { Canvas } from '@src/canvas'
-import { cleanup } from './common'
+import {
+  ANSISurface,
+  Canvas,
+  coordAddIn,
+  coordRound,
+  GridCanvas,
+} from '@src/index'
+import { DemoResources, drawBox, register } from './common'
 
 const ORIGIN = { x: 5, y: 5 }
 const BOX_DIMS = { w: 50, h: 25 }
 
-const surface = new ANSISurface(ORIGIN, BOX_DIMS)
-
-let interval: NodeJS.Timeout | null = null
-
-/**
- * Draw a simple rectangle box
- */
-const drawBox = (canvas: Canvas) => {
-  canvas.plot({ x: 0, y: 0 }, '+')
-  canvas.plotHLine({ x: 1, y: 0 }, BOX_DIMS.w - 2, '-')
-  canvas.plot({ x: BOX_DIMS.w - 1, y: 0 }, '+')
-  canvas.plotVLine({ x: BOX_DIMS.w - 1, y: 1 }, BOX_DIMS.h - 2, '|')
-  canvas.plot({ x: BOX_DIMS.w - 1, y: BOX_DIMS.h - 1 }, '+')
-  canvas.plotHLine({ x: 1, y: BOX_DIMS.h - 1 }, BOX_DIMS.w - 2, '-')
-  canvas.plot({ x: 0, y: BOX_DIMS.h - 1 }, '+')
-  canvas.plotVLine({ x: 0, y: 1 }, BOX_DIMS.h - 2, '|')
+const resources: DemoResources = {
+  surface: new ANSISurface(ORIGIN, BOX_DIMS),
+  interval: null,
 }
+
+register(resources)
+const { surface } = resources
 
 const start = () => {
   console.clear()
   surface.begin()
   surface.clear()
 
-  const canvas = new GridCanvas(BOX_DIMS)
+  const canvas: Canvas = new GridCanvas(BOX_DIMS)
   canvas.beginFrame()
-  drawBox(canvas)
+  drawBox(canvas, BOX_DIMS)
 
   surface.present(canvas.finalizeFrame())
 
@@ -44,7 +37,7 @@ const start = () => {
   canvas.translate({ x: 1, y: 1 })
 
   const fpsMs = 1000 / 25
-  interval = setInterval(() => {
+  resources.interval = setInterval(() => {
     canvas.beginFrame(false)
 
     coordAddIn(dot, velocity)
@@ -74,16 +67,5 @@ const start = () => {
     prevCoord = i
   }, fpsMs)
 }
-
-// restore TTY on any exit path
-process.on('SIGINT', () => {
-  cleanup(surface, interval)
-  process.exit(0)
-})
-process.on('SIGTERM', () => {
-  cleanup(surface, interval)
-  process.exit(0)
-})
-process.on('exit', () => cleanup(surface, interval))
 
 start()

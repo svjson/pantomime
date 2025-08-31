@@ -202,4 +202,24 @@ describe('insideRect', () => {
     // Then
     expect(result).toBe(false)
   })
+
+  describe('coordDistance', () => {
+    it.each([
+      [{ x: 0, y: 0 }, { x: 3, y: 4 }, 5],
+      [{ x: -1, y: -1 }, { x: 2, y: 3 }, 5],
+      [{ x: 1, y: 1 }, { x: 1, y: 1 }, 0],
+      [{ x: -2, y: -3 }, { x: -4, y: -7 }, 4.47213595499958],
+    ])('coordDistance(%o, %o) === %d', (a, b, expected) => {
+      const origA = { ...a }
+      const origB = { ...b }
+
+      // When
+      const result = Math.hypot(b.x - a.x, b.y - a.y)
+
+      // Then
+      expect(result).toBeCloseTo(expected)
+      expect(a).toEqual(origA)
+      expect(b).toEqual(origB)
+    })
+  })
 })

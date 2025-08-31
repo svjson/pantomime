@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "esModuleInterop": true,
     "rootDirs": ["src", "test", "demo"],
     "baseUrl": ".",
     "paths": {

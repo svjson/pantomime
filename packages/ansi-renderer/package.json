@@ -27,7 +27,8 @@
   "scripts": {
     "build": "tsup",
     "test": "vitest run",
-    "demo:bounce": "tsx demo/bounce.ts"
+    "demo:bounce": "tsx demo/bounce.ts",
+    "demo:lava": "tsx demo/lava.ts"
   },
   "dependencies": {
     "fast-deep-equal": "^3.1.3"

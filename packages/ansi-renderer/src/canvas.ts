@@ -10,7 +10,7 @@ export interface Canvas {
    *
    * Swaps/clears buffers as needed, depending on implementation.
    */
-  beginFrame(): void
+  beginFrame(clear?: boolean): void
 
   /**
    * Finalize frame and return `Patch` for `Surface`

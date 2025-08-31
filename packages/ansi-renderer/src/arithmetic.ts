@@ -47,6 +47,17 @@ export const coordRound = (coord: Coord2D): Coord2D => {
 }
 
 /**
+ * Return the distance between two coordinates
+ *
+ * @param a - First coordinate
+ * @param b - Second coordinate
+ * @return Distance between coordinates
+ */
+export const coordDistance = (a: Coord2D, b: Coord2D): number => {
+  return Math.hypot(b.x - a.x, b.y - a.y)
+}
+
+/**
  * Calculate the area of a rectangle or dimension
  *
  * @param dim - Rectangle or dimension
