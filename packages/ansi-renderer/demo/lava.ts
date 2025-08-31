@@ -1,20 +1,32 @@
 import {
-  ANSISurface,
   Canvas,
   Coord2D,
   GridCanvas,
   coordAddIn,
   coordDistance,
+  TerminalDisplay,
 } from '@src/index'
 import { DemoResources, drawBox, register } from './common'
 
-const ORIGIN = { x: 5, y: 5 }
-const BOX_DIMS = { w: 150, h: 40 }
-
+const FRAMERATE_MS = 1000 / 25
 const RAMP = ' .:-=+*#%@%#*+=-:. '
 
+const display = new TerminalDisplay()
+
 const resources: DemoResources = {
-  surface: new ANSISurface(ORIGIN, BOX_DIMS),
+  surface: display.makeSurface({
+    layout: {
+      size: {
+        mode: 'relative',
+        dim: {
+          w: { kind: '%', value: 80 },
+          h: { kind: '%', value: 80 },
+        },
+      },
+      hAlign: 'center',
+      vAlign: 'center',
+    },
+  }),
   interval: null,
 }
 register(resources)
@@ -23,14 +35,22 @@ const { surface } = resources
 const start = () => {
   console.clear()
   surface.begin()
+  surface.clear()
 
-  const canvas: Canvas = new GridCanvas(BOX_DIMS)
-  canvas.beginFrame()
-  drawBox(canvas, BOX_DIMS)
+  const canvas: Canvas = new GridCanvas(surface.bounds)
 
-  surface.present(canvas.finalizeFrame())
-  const container = { x: 1, y: 1, w: BOX_DIMS.w - 2, h: BOX_DIMS.h - 2 }
-  canvas.translate({ x: 1, y: 1 })
+  surface.on('resize', () => {
+    console.clear()
+    canvas.resize(surface.bounds)
+    canvas.clear()
+  })
+
+  let container = {
+    x: 1,
+    y: 1,
+    w: surface.bounds.w - 2,
+    h: surface.bounds.h - 2,
+  }
 
   const nexii: { pos: Coord2D; vel: Coord2D }[] = []
   for (let i = 0; i < 5; i++) {
@@ -46,9 +66,18 @@ const start = () => {
     })
   }
 
-  const fpsMs = 1000 / 25
   resources.interval = setInterval(() => {
-    canvas.beginFrame(false)
+    let container = {
+      x: 1,
+      y: 1,
+      w: surface.bounds.w - 2,
+      h: surface.bounds.h - 2,
+    }
+    canvas.beginFrame()
+    canvas.translate({ x: 0, y: 0 })
+    drawBox(canvas, canvas.dim)
+
+    canvas.translate({ x: 1, y: 1 })
 
     for (const { pos, vel } of nexii) {
       coordAddIn(pos, vel)
@@ -86,14 +115,14 @@ const start = () => {
 
         canvas.plot(
           { x, y },
-          RAMP[RAMP.length - Math.round(RAMP.length * (dist / BOX_DIMS.w))] ??
+          RAMP[RAMP.length - Math.round(RAMP.length * (dist / container.w))] ??
             ' '
         )
       }
     }
 
     surface.present(canvas.finalizeFrame())
-  }, fpsMs)
+  }, FRAMERATE_MS)
 }
 
 start()

@@ -75,6 +75,47 @@ export const coordDistance = (a: Coord2D, b: Coord2D): number => {
 }
 
 /**
+ * Subtract w and h values of `other` from `dim` and return a new result.
+ *
+ * Does not mutate any of the argument values.
+ *
+ * @param dim - First dimension
+ * @param other - Second dimension
+ *
+ * @return New dimension which is the product of `dim` and `other`
+ */
+export const dimSubtract = (
+  dim: Dimension2D,
+  other: Dimension2D
+): Dimension2D => {
+  return {
+    w: dim.w - other.w,
+    h: dim.h - other.h,
+  }
+}
+
+/**
+ * Divide dimension `dim` by `other` and return a new instance.
+ *
+ * Does not mutate any of the argument values.
+ *
+ * @param dim - First dimension
+ * @param other - Second dimension or number used as both w and h.
+ *
+ * @return New dimension which is the divided of `dim`
+ */
+export const dimDivide = (
+  dim: Dimension2D,
+  other: Dimension2D | number
+): Dimension2D => {
+  const { w, h } = typeof other === 'number' ? { w: other, h: other } : other
+  return {
+    w: dim.w - w,
+    h: dim.h - h,
+  }
+}
+
+/**
  * Calculate the area of a rectangle or dimension
  *
  * @param dim - Rectangle or dimension

@@ -7,4 +7,7 @@ export default defineConfig({
       '@src': path.resolve(__dirname, 'src'),
     },
   },
+  test: {
+    setupFiles: ['test/setup/ansi.ts'],
+  },
 })

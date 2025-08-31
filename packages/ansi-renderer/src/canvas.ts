@@ -45,6 +45,14 @@ export interface Canvas {
   clear(): void
 
   /**
+   * Resize the canvas according to `dim`.
+   *
+   * The semantics of the resizing of the contents is subject to Canvas
+   * implementation.
+   */
+  resize(dim: Dimension2D): void
+
+  /**
    * Plot a single cell/"pixel"
    *
    * If `value` is a string, the first character is used as the cell

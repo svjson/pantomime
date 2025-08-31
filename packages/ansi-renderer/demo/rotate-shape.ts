@@ -1,12 +1,31 @@
-import { ANSISurface, Canvas, GridCanvas, Entity, makeShape } from '@src/index'
+import {
+  Canvas,
+  GridCanvas,
+  Entity,
+  makeShape,
+  TerminalDisplay,
+  coordRound,
+} from '@src/index'
 import { DemoResources, drawBox, register } from './common'
 
-const ORIGIN = { x: 5, y: 5 }
-const BOX_DIMS = { w: 150, h: 40 }
-const fpsMs = 1000 / 25
+const FRAMERATE_MS = 1000 / 25
+
+const display = new TerminalDisplay()
 
 const resources: DemoResources = {
-  surface: new ANSISurface(ORIGIN, BOX_DIMS),
+  surface: display.makeSurface({
+    layout: {
+      size: {
+        mode: 'relative',
+        dim: {
+          w: { kind: '%', value: 80 },
+          h: { kind: '%', value: 80 },
+        },
+      },
+      hAlign: 'center',
+      vAlign: 'center',
+    },
+  }),
   interval: null,
 }
 register(resources)
@@ -16,12 +35,7 @@ const start = () => {
   console.clear()
   surface.begin()
 
-  const canvas: Canvas = new GridCanvas(BOX_DIMS)
-  canvas.beginFrame()
-  drawBox(canvas, BOX_DIMS)
-
-  const container = { x: 1, y: 1, w: BOX_DIMS.w - 2, h: BOX_DIMS.h - 2 }
-  canvas.translate({ x: 1, y: 1 })
+  const canvas: Canvas = new GridCanvas(surface.bounds)
 
   const shape = makeShape([
     '    ,#####       ##        ##    .##    #########    ###  ',
@@ -38,14 +52,23 @@ const start = () => {
   const entity = new Entity({ x: 50, y: 20 }, shape)
 
   resources.interval = setInterval(() => {
-    canvas.beginFrame()
+    canvas.beginFrame(true)
+    canvas.setClip()
+    drawBox(canvas, canvas.dim)
+    const container = {
+      x: 1,
+      y: 1,
+      w: canvas.dim.w - 2,
+      h: canvas.dim.h - 2,
+    }
+    canvas.setClip(container)
+
+    entity.position = coordRound({ x: canvas.dim.w / 2, y: canvas.dim.h / 2 })
     entity.draw(canvas)
     surface.present(canvas.finalizeFrame())
 
     entity.transform.rot += 0.05
-    // entity.transform.pos.x += 0.03
-    // entity.transform.pos.y += 0.01
-  }, fpsMs)
+  }, FRAMERATE_MS)
 }
 
 start()

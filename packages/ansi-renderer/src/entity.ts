@@ -29,6 +29,10 @@ export class Entity {
     this.shape = shape
   }
 
+  set position(pos: Coord2D) {
+    this.transform.pos = pos
+  }
+
   draw(canvas: Canvas) {
     const rot = this.transform.rot
     const w = this.shape[0].length

@@ -1,4 +1,4 @@
-import { Coord2D, Dimension2D } from './geom'
+import { Coord2D, Dimension2D, Rect2D } from './geom'
 
 /**
  * Smallest unit of output, a character/terminal cell.
@@ -45,10 +45,13 @@ export type Run = {
  */
 export type Patch = Run[]
 
+export type SurfaceEventType = 'resize'
+
 /**
  * Output surface abstraction
  */
 export interface Surface {
+  bounds: Rect2D
   /**
    * Prepare surface for output, ie, hide cursor
    */
@@ -59,9 +62,20 @@ export interface Surface {
   present(patch: Patch): void
 
   /**
+   * Set surface bounds
+   */
+  setBounds(bounds: Rect2D): void
+
+  /**
    * Clear surface
    */
   clear(): void
+
+  /**
+   * Register a callback to be invoked when an event of type `event`
+   * occurs inside this Surface.
+   */
+  on(event: SurfaceEventType, cb: () => void): void
 
   /**
    * Destroy surface and restore target, ie, restore cursor
@@ -84,6 +98,10 @@ export class ANSISurface implements Surface {
    */
   private readonly ESC = '\x1b[' // CSI
 
+  private listeners: Record<SurfaceEventType, Function[]> = {
+    resize: [],
+  }
+
   /**
    * Construct a new ANSISurface instance, with its top left corner located
    * at `origin`.
@@ -98,6 +116,22 @@ export class ANSISurface implements Surface {
     private dim: Dimension2D = { w: 1, h: 1 },
     private __out: Output = process.stdout
   ) {}
+
+  /**
+   * Get the current bounding box of this surface
+   */
+  get bounds() {
+    return { ...this.origin, ...this.dim }
+  }
+
+  /**
+   * Set the Surface size and origin
+   */
+  setBounds(rect: Rect2D): void {
+    this.origin = { x: rect.x, y: rect.y }
+    this.dim = { w: rect.w, h: rect.h }
+    this.#fireEvent('resize')
+  }
 
   /**
    * Prefix an ANSI output sequence with the ANSI escape sequence
@@ -136,7 +170,7 @@ export class ANSISurface implements Surface {
       row = row.y
     }
 
-    this.write(this.esc(`${row};${col}H`))
+    this.write(this.esc(`${row + this.origin.y};${col + this.origin.x}H`))
   }
   /**
    * Hide cursor
@@ -159,10 +193,30 @@ export class ANSISurface implements Surface {
    */
   present(patch: Patch) {
     for (const run of patch) {
-      this.moveTo(this.origin.y + run.y, this.origin.x + run.x)
-      this.write(run.cells.map((c) => c.ch).join(''))
+      this.moveTo(run.y, run.x)
+      this.write(
+        run.cells
+          .map((c) => c.ch)
+          .slice(
+            0,
+            run.cells.length -
+              Math.max(0, run.x + run.cells.length - this.bounds.w)
+          )
+          .join('')
+      )
     }
   }
+  /**
+   * Register a callback to be invoked when an event of type `event`
+   */
+  on(event: SurfaceEventType, handler: () => void): void {
+    this.listeners[event].push(handler)
+  }
+
+  #fireEvent(event: SurfaceEventType) {
+    this.listeners[event].forEach((handler) => handler(event))
+  }
+
   /**
    * Clear surface area
    */

@@ -45,16 +45,38 @@ export class Grid {
   /**
    * Grid cell data, as a contiguous array
    */
-  private data: GridCell[]
+  private _data: GridCell[]
   /**
    * Construct a new Grid of dimension `dim`
    *
-   * All cells are initialized to a space character (' ') with no colors.
+   * All cells are initialized to a space character (' ') with no colors,
+   * unless grid data is provided.
    *
-   * @param dim Dimension of the grid
+   * If grid data is provided and does not match `dim` it will be truncated
+   * or extend accordingly. Mismatch in grid width will make the row offsets
+   * skew and result in a misaligned bitmap.
+   *
+   * @param dim - Dimension of the grid
+   * @param data - (Optional) Grid data
    */
-  constructor(private readonly dim: Dimension2D) {
-    this.data = Array.from({ length: areaOf(dim) }, () => ({ ch: ' ' }))
+  constructor(
+    private dim: Dimension2D,
+    data?: GridCell[]
+  ) {
+    this.dim = { ...dim }
+    if (!data) {
+      this._data = Array.from({ length: areaOf(dim) }, () => ({ ch: ' ' }))
+    } else {
+      this._data = [...data]
+      const lenDiff = areaOf(dim) - this._data.length
+      if (lenDiff < 0) {
+        this._data = this._data.slice(0, areaOf(dim))
+      } else if (lenDiff > 0) {
+        for (let i = 0; i < lenDiff; i++) {
+          this._data.push({ ch: ' ' })
+        }
+      }
+    }
   }
   /**
    * Convert a 2D coordinate to a 1D array index
@@ -73,7 +95,7 @@ export class Grid {
    * @param coord 2D coordinate
    */
   get(coord: Coord2D): GridCell {
-    return this.data[this.index(coord)]
+    return this._data[this.index(coord)]
   }
 
   /**
@@ -83,7 +105,7 @@ export class Grid {
    * @param cell Cell data to set
    */
   set(coord: Coord2D, cell: GridCell) {
-    return (this.data[this.index(coord)] = cell)
+    return (this._data[this.index(coord)] = cell)
   }
 
   /**
@@ -91,7 +113,11 @@ export class Grid {
    * with no colors.
    */
   clear(): void {
-    for (let i = 0; i < this.data.length; i++) this.data[i] = { ch: ' ' }
+    for (let i = 0; i < this._data.length; i++) this._data[i] = { ch: ' ' }
+  }
+
+  get data(): GridCell[] {
+    return this._data
   }
 
   /**
@@ -102,11 +128,42 @@ export class Grid {
   }
 
   /**
+   * Resize the grid
+   */
+  resize(dim: Dimension2D) {
+    const newData: GridCell[] = []
+    for (let row = 0; row < Math.min(this.dim.h, dim.h); row++) {
+      let rowStart = this.index({ x: 0, y: row })
+      newData.push(
+        ...this._data.slice(rowStart, rowStart + Math.min(this.dim.w, dim.w))
+      )
+      if (dim.w > this.dim.w) {
+        newData.push(
+          ...Array.from({ length: dim.w - this.dim.w }, () => ({
+            ch: ' ',
+          }))
+        )
+      }
+    }
+
+    if (dim.h > this.dim.h) {
+      newData.push(
+        ...Array.from({ length: dim.w }, () => ({
+          ch: ' ',
+        }))
+      )
+    }
+
+    this._data = newData
+    this.dim = dim
+  }
+
+  /**
    * Create a clone of this grid
    */
   clone(): Grid {
     const g = new Grid(this.dim)
-    g.data = this.data.slice()
+    g._data = this._data.slice()
     return g
   }
 }
@@ -140,8 +197,8 @@ export class GridCanvas implements Canvas {
    * Construct a new GridCanvas instance
    */
   constructor(dim: Dimension2D) {
-    this.dim = dim
-    this.grid = new Grid(dim)
+    this.dim = { w: dim.w, h: dim.h }
+    this.grid = new Grid(this.dim)
     this.prev = this.grid.clone()
   }
 
@@ -200,7 +257,7 @@ export class GridCanvas implements Canvas {
   }
 
   clear(): void {
-    this.clear()
+    this.grid.clear()
   }
 
   plot(c: Coord2D, value: string | GridCell): void {
@@ -347,6 +404,13 @@ export class GridCanvas implements Canvas {
         if (cell.ch !== ' ') this.plot({ x: c.x + x, y: c.y + y }, cell)
       }
     }
+  }
+
+  resize(dim: Dimension2D) {
+    this.dim.w = dim.w
+    this.dim.h = dim.h
+    this.grid.resize(dim)
+    this.prev.resize(dim)
   }
 
   /**
