@@ -1,5 +1,6 @@
 import { coordRound } from '@pantomime/core'
 import { Sprite } from '@pantomime/raster'
+import { LFO } from '@pantomime/math'
 
 import {
   GlyphCanvas,
@@ -62,10 +63,11 @@ const start = () => {
     bitmap: shape,
     isEmpty: (c) => !c || c.ch === ' ',
   })
-  sprite.transform.hotspot = {
+  const center = {
     x: shape[0].length / 2,
     y: shape.length / 2,
   }
+  const lfo = new LFO({ freqHz: 0.25, amplitude: center.x / 2 })
 
   const hud = makeHUD(display, surface, FRAMERATE_MS)
 
@@ -82,6 +84,11 @@ const start = () => {
     canvas.setClip(container)
 
     sprite.transform.rot += 0.05
+    const lfoRead = lfo.next(FRAMERATE_MS / 1000)
+    sprite.transform.hotspot = {
+      x: center.x + lfoRead,
+      y: center.y + -lfoRead / 2,
+    }
     sprite.position = coordRound({ x: canvas.dim.w / 2, y: canvas.dim.h / 2 })
     sprite.draw(canvas)
     surface.present(canvas.finalizeFrame())

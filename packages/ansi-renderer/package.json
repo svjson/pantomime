@@ -35,6 +35,7 @@
   },
   "peerDependencies": {
     "@pantomime/core": "^0.0.1",
+    "@pantomime/math": "^0.0.1",
     "@pantomime/raster": "^0.0.1",
     "@pantomime/vector": "^0.0.1"
   },
@@ -43,6 +44,7 @@
   },
   "devDependencies": {
     "@pantomime/core": "^0.0.1",
+    "@pantomime/math": "^0.0.1",
     "@pantomime/raster": "^0.0.1",
     "@pantomime/vector": "^0.0.1"
   }
