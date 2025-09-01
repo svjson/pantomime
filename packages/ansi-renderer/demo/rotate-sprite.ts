@@ -39,6 +39,12 @@ const start = () => {
 
   const canvas: GlyphCanvas = new GridCanvas(surface.bounds)
 
+  surface.on('resize', () => {
+    console.clear()
+    canvas.resize(surface.bounds)
+    canvas.clear()
+  })
+
   const shape = makeGlyphBitmap([
     '    ,#####       ##        ##    .##    #########    ###  ',
     '   ,#...,*#    ##*.##     #*.#  .#**#  #*.......*#  #*.*# ',
