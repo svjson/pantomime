@@ -57,11 +57,15 @@ const start = () => {
     '    #*.*#    #*#  #*#    #.#    #*#       ##       #..#   ',
     '     ###     ##    #      #      #                  ##*   ',
   ])
-  const entity = new Sprite<Cell>({
+  const sprite = new Sprite<Cell>({
     pos: { x: 50, y: 20 },
     bitmap: shape,
     isEmpty: (c) => !c || c.ch === ' ',
   })
+  sprite.transform.hotspot = {
+    x: shape[0].length / 2,
+    y: shape.length / 2,
+  }
 
   const hud = makeHUD(display, surface, FRAMERATE_MS)
 
@@ -77,9 +81,9 @@ const start = () => {
     }
     canvas.setClip(container)
 
-    entity.transform.rot += 0.05
-    entity.position = coordRound({ x: canvas.dim.w / 2, y: canvas.dim.h / 2 })
-    entity.draw(canvas)
+    sprite.transform.rot += 0.05
+    sprite.position = coordRound({ x: canvas.dim.w / 2, y: canvas.dim.h / 2 })
+    sprite.draw(canvas)
     surface.present(canvas.finalizeFrame())
     hud.tick()
   }, FRAMERATE_MS)

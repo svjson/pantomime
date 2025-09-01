@@ -39,18 +39,16 @@ export class Sprite<T> implements Shape2D<T> {
     const w = this.shape[0].length
     const h = this.shape.length
 
-    const c = {
-      x: w / 2,
-      y: h / 2,
-    }
-
     const corners = [
       { x: 0, y: 0 },
       { x: w - 1, y: 0 },
       { x: 0, y: h - 1 },
       { x: w - 1, y: h - 1 },
     ].map((p) =>
-      coordAdd(coordRotate(coordSubtract(p, c), rot), this.transform.pos)
+      coordAdd(
+        coordRotate(coordSubtract(p, this.transform.hotspot), rot),
+        this.transform.pos
+      )
     )
 
     const xs = corners.map((c) => c.x)
@@ -70,7 +68,7 @@ export class Sprite<T> implements Shape2D<T> {
             coordSubtract({ x, y }, this.transform.pos),
             -this.transform.rot
           ),
-          c
+          this.transform.hotspot
         )
 
         if (local.x >= 0 && local.x < w && local.y >= 0 && local.y < h) {
