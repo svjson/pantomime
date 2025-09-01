@@ -3,6 +3,8 @@ export {
   coordAdd,
   coordAddIn,
   coordDistance,
+  coordDivide,
+  coordSum,
   coordRotate,
   coordRound,
   coordSubtract,

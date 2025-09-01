@@ -17,6 +17,31 @@ export const coordAdd = (coord: Coord2D, other: Coord2D): Coord2D => {
   }
 }
 
+export const coordSum = (...cs: Coord2D[]): Coord2D => {
+  return cs.reduce((r, c) => coordAdd(r, c), { x: 0, y: 0 })
+}
+
+/**
+ * Divide coordinate `coord` by `other` and return a new instance.
+ *
+ * Does not mutate any of the argument values.
+ *
+ * @param coord - First coordinate
+ * @param other - Second coordinate or number used as both w and h.
+ *
+ * @return New coordinate which is the divided `coord`
+ */
+export const coordDivide = (
+  coord: Coord2D,
+  other: Coord2D | number
+): Coord2D => {
+  const { x, y } = typeof other === 'number' ? { x: other, y: other } : other
+  return {
+    x: coord.x / x,
+    y: coord.y / y,
+  }
+}
+
 /**
  * Subtract x and y values of `other` from `coord` and return a new result.
  *
@@ -102,7 +127,7 @@ export const dimSubtract = (
  * @param dim - First dimension
  * @param other - Second dimension or number used as both w and h.
  *
- * @return New dimension which is the divided of `dim`
+ * @return New dimension which is the divided `dim`
  */
 export const dimDivide = (
   dim: Dimension2D,

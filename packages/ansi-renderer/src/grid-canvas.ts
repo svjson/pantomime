@@ -160,7 +160,7 @@ export class GridCanvas implements GlyphCanvas {
       return
     }
     if (a.x === b.x) {
-      this.plotVLine(b, b.y - a.y, glyph)
+      this.plotVLine(a, b.y - a.y, glyph)
       return
     }
     let x0 = a.x,

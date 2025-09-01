@@ -2,6 +2,8 @@ export {
   areaOf,
   coordAdd,
   coordAddIn,
+  coordDivide,
+  coordSum,
   coordDistance,
   coordRotate,
   coordRound,
