@@ -1,4 +1,4 @@
-import { coordDivide, coordRound, coordSubtract } from '@pantomime/core'
+import { coordAverage, coordRound, coordSubtract } from '@pantomime/core'
 
 import { GlyphCanvas, GridCanvas, TerminalDisplay } from '@src/index'
 import { DemoResources, drawBox, makeHUD, register } from './common'
@@ -40,8 +40,8 @@ const start = () => {
     canvas.clear()
   })
 
-  const polygonA = new Polygon<Glyph>(
-    [
+  const polygonA = new Polygon<Glyph>({
+    path: [
       { x: 20, y: 80 },
       { x: 40, y: 20 },
       { x: 50, y: 20 },
@@ -51,10 +51,23 @@ const start = () => {
       { x: 38, y: 60 },
       { x: 30, y: 80 },
     ],
-    {
+    brush: {
       cell: () => '*',
-    }
-  )
+    },
+  })
+  polygonA.transform.hotspot = coordAverage(...polygonA.path)
+
+  const polygonB = new Polygon<Glyph>({
+    path: [
+      { x: 45, y: 35 },
+      { x: 50, y: 52 },
+      { x: 40, y: 52 },
+    ],
+    brush: {
+      cell: () => '*',
+    },
+  })
+  polygonB.transform.hotspot = polygonA.transform.hotspot
 
   const hud = makeHUD(display, surface, FRAMERATE_MS)
 
@@ -71,11 +84,14 @@ const start = () => {
     canvas.setClip(container)
 
     polygonA.transform.rot += 0.05
+    polygonB.transform.rot = polygonA.transform.rot
     polygonA.transform.pos = coordRound({
       x: canvas.dim.w / 2,
       y: canvas.dim.h / 2,
     })
+    polygonB.transform.pos = polygonA.transform.pos
     polygonA.draw(canvas)
+    polygonB.draw(canvas)
     surface.present(canvas.finalizeFrame())
     hud.tick()
   }, FRAMERATE_MS)

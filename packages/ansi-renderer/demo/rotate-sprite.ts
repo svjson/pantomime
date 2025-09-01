@@ -57,11 +57,11 @@ const start = () => {
     '    #*.*#    #*#  #*#    #.#    #*#       ##       #..#   ',
     '     ###     ##    #      #      #                  ##*   ',
   ])
-  const entity = new Sprite<Cell>(
-    { x: 50, y: 20 },
-    shape,
-    (c) => !c || c.ch === ' '
-  )
+  const entity = new Sprite<Cell>({
+    pos: { x: 50, y: 20 },
+    bitmap: shape,
+    isEmpty: (c) => !c || c.ch === ' ',
+  })
 
   const hud = makeHUD(display, surface, FRAMERATE_MS)
 

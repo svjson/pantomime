@@ -4,11 +4,18 @@ import {
   coordAdd,
   coordRotate,
   coordSubtract,
+  makeShape2DTransform,
   Shape2D,
+  Shape2DBaseCtorParams,
   Transform,
 } from '@pantomime/core'
 
 import { Bitmap } from './bitmap'
+
+export interface SpriteCtorParams<T> extends Shape2DBaseCtorParams {
+  isEmpty: (p: T) => boolean
+  bitmap: Bitmap<T>
+}
 
 export class Sprite<T> implements Shape2D<T> {
   transform: Transform
@@ -16,9 +23,10 @@ export class Sprite<T> implements Shape2D<T> {
 
   isEmpty: (p: T) => boolean
 
-  constructor(pos: Coord2D, shape: Bitmap<T>, isEmpty: (p: T) => boolean) {
-    this.transform = { pos, rot: 0 }
-    this.shape = shape
+  constructor(params: SpriteCtorParams<T>) {
+    const { bitmap, isEmpty } = params
+    this.transform = makeShape2DTransform(params)
+    this.shape = bitmap
     this.isEmpty = isEmpty
   }
 

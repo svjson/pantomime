@@ -12,16 +12,16 @@ describe('Polygon', () => {
           lines.push([from, to, value])
         },
       } as Canvas<string, any>
-      const polygon = new Polygon<string>(
-        [
+      const polygon = new Polygon<string>({
+        path: [
           { x: 30, y: 5 },
           { x: 50, y: 20 },
           { x: 10, y: 20 },
         ],
-        {
+        brush: {
           cell: () => '*',
-        }
-      )
+        },
+      })
 
       // When
       polygon.draw(canvas)

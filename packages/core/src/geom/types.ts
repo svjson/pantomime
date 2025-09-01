@@ -9,6 +9,7 @@ export type Degrees = number
  */
 export interface Transform {
   pos: Coord2D
+  hotspot: Coord2D
   rot?: Degrees
 }
 
