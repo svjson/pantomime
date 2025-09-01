@@ -2,11 +2,9 @@ import {
   Canvas,
   Coord2D,
   coordAdd,
-  coordDivide,
   coordRotate,
   coordRound,
   coordSubtract,
-  coordSum,
   Degrees,
   Shape2D,
   Transform,
@@ -18,8 +16,6 @@ export interface Brush<C> {
   cell(opts?: { angle?: Degrees }): C
 }
 
-export const coordAverage = (...cs: Coord2D[]) => {
-  return coordDivide(coordSum(...cs), cs.length)
 }
 
 export class Polygon<T> implements Shape2D<T> {

@@ -17,6 +17,26 @@ export const coordAdd = (coord: Coord2D, other: Coord2D): Coord2D => {
   }
 }
 
+/**
+ * Calculate the average x and y values of a Coord2D
+ *
+ * Does not mutate any of the argument values.
+ *
+ * @param cs - Coordinates to average
+ * @return New coordinate which is the average of the input coordinates
+ */
+export const coordAverage = (...cs: Coord2D[]) => {
+  return coordDivide(coordSum(...cs), cs.length)
+}
+
+/**
+ * Add x and y values of multiple Coord2D coordinates and return a new result.
+ *
+ * Does not mutate any of the argument values.
+ *
+ * @param cs - Coordinates to sum
+ * @return New coordinate which is the sum of the input coordinates
+ */
 export const coordSum = (...cs: Coord2D[]): Coord2D => {
   return cs.reduce((r, c) => coordAdd(r, c), { x: 0, y: 0 })
 }

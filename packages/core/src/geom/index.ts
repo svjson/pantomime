@@ -2,6 +2,7 @@ export {
   areaOf,
   coordAdd,
   coordAddIn,
+  coordAverage,
   coordDistance,
   coordDivide,
   coordSum,
